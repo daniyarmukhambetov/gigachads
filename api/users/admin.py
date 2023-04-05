@@ -1,4 +1,8 @@
 from django.contrib import admin
+
+from movies.models import *
+from cinemas.models import *
+from tickets.models import *
 from .models import *
 
 # Register your models here.

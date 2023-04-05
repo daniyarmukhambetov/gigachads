@@ -49,6 +49,9 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.twitter',
     'users',
+    'movies',
+    'tickets',
+    'cinemas',
 ]
 
 SITE_ID = 1
