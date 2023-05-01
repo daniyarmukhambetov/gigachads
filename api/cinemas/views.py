@@ -15,7 +15,7 @@ from .models import *
 @permission_classes((permissions.AllowAny,))
 class EventByTimeViewSet(APIView):
     def get(self, request):
-        queryset = Event.objects.all().filter(date=parse_date(request.data.get('date'))).order_by('start_time')
+        queryset = Event.objects.all().filter(date=parse_date(request.data.get('date')), movie=request.data.get('movie_id')).order_by('start_time')
         serializer_class = EventSerializer(queryset, many=True)
         return Response(serializer_class.data)
 
