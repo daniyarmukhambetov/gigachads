@@ -6,8 +6,9 @@ import axios from "axios";
 function MovieDetailPage() {
   const token = 'Bearer ' + localStorage.getItem('token');
   const headers = { Authorization: token };
+  
 
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   const moviesApi = "https://api.themoviedb.org/3/movie";
   const imagePath = "https://image.tmdb.org/t/p/original";
@@ -15,8 +16,14 @@ function MovieDetailPage() {
   const [error, setError] = useState("");
   const [movie, setMovie] = useState(null);
 
+  const [sorted, setSorted] = useState('cinema');
+  const [date, setDate] = useState(new Date().toISOString().substr(0, 10));
 
-  // const [data, setData] = useState([]);  
+  const handleDateChange = (event) => {
+    setDate(event.target.value);
+  }
+
+  const [events, setEvents] = useState([]);  
 
   const { id } = useParams();
 
@@ -35,50 +42,67 @@ function MovieDetailPage() {
   }
 
 
-  const data = [
-    {
-      "id": 1,
-      "startTime": "10:00",
-      "cinema": "Арман",
-      "language": "рус",
-      "adultPrice": 2000,
-      "studentPrice": 1500,
-      "childPrice": 1000
-    },
-    {
-      "id": 2,
-      "startTime": "10:00",
-      "cinema": "Арман",
-      "language": "рус",
-      "adultPrice": 2000,
-      "studentPrice": 1500,
-      "childPrice": 1000
-    },
-    {
-      "id": 3,
-      "startTime": "10:00",
-      "cinema": "Арман",
-      "language": "рус",
-      "adultPrice": 2000,
-      "studentPrice": 1500,
-      "childPrice": 1000
+
+
+  let url = null;
+
+  useEffect(() => {
+    fetchEventData();
+  }, [sorted]);
+
+  useEffect(() => {
+    fetchEventData();
+  }, [date]);
+
+  async function fetchEventData() {
+    if (sorted == 'cinema') {
+      url = 'http://127.0.0.1:8000/cinema/by_cinema/';
+    } else if (sorted == 'time') {
+      url = 'http://127.0.0.1:8000/cinema/by_time/'
     }
-  ]
-  
 
-  // const fetchMovieData = () => {
-  //   axios.get('http://localhost:8000/dj-rest-auth/user/', { headers })
-  //     .then(response => setData(response.data))
-  //     .catch(error => console.error(error));
-  // };
+      const response = await axios.get(
+        url, {
+          params: {
+            date: date,
+            movie_id: 1
+          },
+        }
+      )
+      .then((response) => {
+        setEvents(response.data);
+        // setEvents(response.events);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    }
 
 
-  function openModal(props) {
+
+  function excludedSeats(seats) {
+    let seat = [];
+    for (let i = 0; i < seats.length; i++) {
+      seat.push(parseInt((seats[i].seat_number)));
+    }
+    return seat;
+  }
+
+  const [currentEvent, setCurrentEvent] = useState();
+
+  async function openModal(event) {
     setIsOpen(true);
-    // fillMatrix();
-    // axios.get('', { headers })
-    // .then(response => setData(response.data));
-
+    setCurrentEvent(event);
+    const response = await axios.get('http://127.0.0.1:8000/tickets/tickets/', {
+      params: {
+        event__id: event.id,
+      }
+      }
+      )
+      .then(response => setExcludedNumbers(excludedSeats(response.data)))
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   function closeModal() {
@@ -86,7 +110,29 @@ function MovieDetailPage() {
     setSelected([]);
   }
 
-  function bookTickets() {}
+  function parseSelected(items) {
+    const list = [];
+    for (let i = 0; i < items.length; i++) {
+      list.push({"seat_number": items[i]});
+    }
+    return list;
+  }
+
+
+  async function bookTickets() {
+    const response = await axios.post('http://127.0.0.1:8000/tickets/tickets/', parseSelected(selected), {
+      params: {
+        event: currentEvent.id,
+      },
+      headers,
+    })
+    .then(response => (console.log(response.data)))
+    .catch((error) => {
+      console.log(error);
+    });
+    setSelected('');
+    openModal(currentEvent);
+  }
 
   const [matrix, setMatrix] = useState(
     Array.from({ length: 10 }, (_, row) =>
@@ -95,7 +141,7 @@ function MovieDetailPage() {
   );
 
 
-  const [excludedNumbers, setExcludedNumbers] = useState([5, 7, 9]);
+  const [excludedNumbers, setExcludedNumbers] = useState([]);
   const [selected, setSelected] = useState([]);
 
   const handleSelect = (num) => {
@@ -108,24 +154,35 @@ function MovieDetailPage() {
   };
 
   
-  const tik = data.map((item, id) => (
+  const showEvent = events.map((item, id) => (
     <tr key={id}>
-      <td>{item.startTime}</td>
+      <td>{new Date(item.start_time).toLocaleString()}</td>
       <td>{item.cinema}</td>
-      <td>{item.language}</td>
-      <td>{item.adultPrice}</td>
-      <td>{item.studentPrice}</td>
-      <td>{item.childPrice}</td>
+      <td>RU</td>
+      <td>{item.adult_price}</td>
+      <td>{item.student_price}</td>
+      <td>{item.child_price}</td>
       <td><button onClick={() => openModal(item)}>Купить</button></td>
     </tr>
   ));
 
 
+
   useEffect(() => {
     fetchData().then();
     
-    // fetchMovieData();
-  });
+    fetchEventData();
+  }, []);
+
+  // useEffect(() => {
+  //   axios.defaults.headers.common['authorization'] = `Bearer ${localStorage.getItem('token')}`;
+  // }, [localStorage.getItem('token')]);
+  // useEffect(() => {
+  //   fetchData().then();
+  //   fetchEventData();
+    
+  //   // fetchMovieData();
+  // });
 
   return (
     <div className="content">
@@ -199,8 +256,15 @@ function MovieDetailPage() {
           <div className="movie-detail-overview">"{movie.overview}"</div>
         </div>
       )}
-
+      <div className="classSort">
+        <span className="buttonSort"><button onClick={() => setSorted('time')}>sort by time</button></span>
+        <span className="buttonSort"><button onClick={() => setSorted('cinema')}>sort by cinema</button></span>
+      </div>
+      <div>
+        <input type="date" value={date} onChange={handleDateChange} />
+      </div>
     <table>
+      
       <thead>
         <tr>
           <th>Время</th>
@@ -213,7 +277,7 @@ function MovieDetailPage() {
         </tr>
       </thead>
       <tbody>
-        {tik}
+        {showEvent}
       </tbody>
     </table>
 
@@ -223,6 +287,7 @@ function MovieDetailPage() {
             <div className="close"><button onClick={closeModal}>Close</button></div>
             
             <div>
+            
             <table>
               <tbody>
                 {matrix.map((row, rowIndex) => (
