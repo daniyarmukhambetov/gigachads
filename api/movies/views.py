@@ -12,6 +12,7 @@ class MovieViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
     serializer_class = MovieModelSerializer
 
+
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     permission_classes = [permissions.AllowAny]
@@ -22,4 +23,3 @@ class StatusViewSet(viewsets.ModelViewSet):
     queryset = Status.objects.all()
     permission_classes = [permissions.AllowAny]
     serializer_class = CategoryModelSerializer
-
