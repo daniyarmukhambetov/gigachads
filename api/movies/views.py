@@ -23,7 +23,3 @@ class StatusViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
     serializer_class = CategoryModelSerializer
 
-
-
-
-
