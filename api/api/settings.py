@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-6l7487b#*r^rlbp!%505#5ny!afws=8l24&9#=$66mzab^!$*$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS=['http://127.0.0.1', '*', 'http://localhost:3000' ]
 
 
 # Application definition
@@ -53,6 +53,8 @@ INSTALLED_APPS = [
     'movies',
     'tickets',
     'cinemas',
+
+    'corsheaders',
 ]
 
 SITE_ID = 1
@@ -65,9 +67,52 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'corsheaders.middleware.CorsMiddleware',
+    'corsheaders.middleware.CorsPostCsrfMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'api.urls'
+
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:3000',
+)
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+]
+
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
+
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+
+
+
+
+
+
+
+
 
 TEMPLATES = [
     {
@@ -87,6 +132,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'api.wsgi.application'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 
 
 # Database
