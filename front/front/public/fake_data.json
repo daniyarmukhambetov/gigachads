@@ -114,5 +114,34 @@
         }
       ]
     }
+  ],
+  "movies": [
+    {
+      "id": 1,
+      "startTime": "10:00",
+      "cinema": "Арман",
+      "language": "RU",
+      "adultPrice": 2000,
+      "studentPrice": 1500,
+      "childPrice": 1000
+    },
+    {
+      "id": 2,
+      "startTime": "10:00",
+      "cinema": "Арман",
+      "language": "RU",
+      "adultPrice": 2000,
+      "studentPrice": 1500,
+      "childPrice": 1000
+    },
+    {
+      "id": 3,
+      "startTime": "10:00",
+      "cinema": "Арман",
+      "language": "RU",
+      "adultPrice": 2000,
+      "studentPrice": 1500,
+      "childPrice": 1000
+    }
   ]
 }

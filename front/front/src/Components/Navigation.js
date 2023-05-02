@@ -19,7 +19,9 @@ export function Navigation() {
       <Link to={"/about"} className="nav-component">
         About Us
       </Link>
-      {/*<Link to={"/profile"} className="nav-component">Profile</Link>*/}
+      <Link to={"/profile"} className="nav-component">
+        Profile
+      </Link>
     </div>
   );
 }

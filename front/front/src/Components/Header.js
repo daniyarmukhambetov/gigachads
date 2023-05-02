@@ -20,7 +20,10 @@ export function Header() {
         <Link to={"/about"} className="">
           About Us
         </Link>
+        <Link to={"/profile"} className="">
+          Profile
+        </Link>
       </div>
     </div>
-  );
+  );  
 }
