@@ -231,7 +231,7 @@ a {
 }
 
 .movie-detail-card-img img {
-  max-width: 150px;
+  max-width: 350px;
   border-radius: 1rem;
   /*width: 100%;*/
 }
@@ -455,14 +455,12 @@ table td {
   padding-top: 0px;
   border: 1px solid black;
 }
-/* 
-.classSort {
-  background-color: gray;
-}
 
 .buttonSort {
-  background-color: green
-} */
+  padding: 4px;
+  background-color: green;
+  font-size: 140%;
+}
 
 /* 
 .modal {

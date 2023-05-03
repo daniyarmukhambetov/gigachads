@@ -21,6 +21,7 @@ function MovieDetailPage() {
 
   const handleDateChange = (event) => {
     setDate(event.target.value);
+    closeModal();
   }
 
   const [events, setEvents] = useState([]);  
@@ -41,13 +42,11 @@ function MovieDetailPage() {
     }
   }
 
-
-
-
   let url = null;
 
   useEffect(() => {
     fetchEventData();
+    closeModal();
   }, [sorted]);
 
   useEffect(() => {
@@ -257,8 +256,8 @@ function MovieDetailPage() {
         </div>
       )}
       <div className="classSort">
-        <span className="buttonSort"><button onClick={() => setSorted('time')}>sort by time</button></span>
-        <span className="buttonSort"><button onClick={() => setSorted('cinema')}>sort by cinema</button></span>
+        <span><button className="buttonSort" onClick={() => setSorted('time')}>sort by time</button></span>
+        <span><button className="buttonSort" onClick={() => setSorted('cinema')}>sort by cinema</button></span>
       </div>
       <div>
         <input type="date" value={date} onChange={handleDateChange} />
