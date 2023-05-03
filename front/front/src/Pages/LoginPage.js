@@ -26,6 +26,9 @@ export function LoginPage() {
       .then(response => {
         const token = response.data.access_token;
         localStorage.setItem('token', token);
+        localStorage.setItem('username', response.data.user.username);
+        localStorage.setItem('email', response.data.user.email);
+        console.log(localStorage.getItem('username'));
         navigate('/profile');
         // Redirect to home page or dashboard after successful login
       })

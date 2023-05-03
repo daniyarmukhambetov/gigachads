@@ -231,7 +231,7 @@ a {
 }
 
 .movie-detail-card-img img {
-  max-width: 150px;
+  max-width: 350px;
   border-radius: 1rem;
   /*width: 100%;*/
 }
@@ -456,6 +456,11 @@ table td {
   border: 1px solid black;
 }
 
+.buttonSort {
+  padding: 4px;
+  background-color: green;
+  font-size: 140%;
+}
 
 /* 
 .modal {

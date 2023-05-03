@@ -27,6 +27,8 @@ export function RegisterPage() {
             const refresh_token = response.data.refresh_token
             localStorage.setItem('token', token);
             localStorage.setItem('refresh_token', refresh_token)
+            localStorage.setItem('username', response.data.user.username);
+            localStorage.setItem('email', response.data.user.email);
             navigate('/profile');
         })
         .catch(error => {
