@@ -76,9 +76,9 @@ a {
   position: fixed;
   top: 22%;
   left: -9%;
-  border-top: 4px solid rgb(106, 45, 45);
-  border-bottom: 4px solid rgb(106, 45, 45);
-  border-right: 24px solid rgb(106, 45, 45);
+  border-top: 4px solid rgb(58, 80, 225);
+  border-bottom: 4px solid rgb(58, 80, 225);
+  border-right: 24px solid rgb(58, 80, 225);
   padding: 10px;
   transition: 0.3s;
   border-radius: 0 60px 60px 0;
@@ -358,6 +358,7 @@ li a {
 
 .dev-info-block {
   display: flex;
+  margin-bottom: 20px;
 }
 
 .dev-info {
@@ -367,6 +368,28 @@ li a {
 
 .UserImg {
   height: 300px;
+  border-radius: 100px;
+}
+
+.logout {
+  /* width: 100%; */
+  font-size: 300%;
+  border: black solid 10px;
+  border-radius: 100px / 200px;
+  color: white;
+  background-color: rebeccapurple;
+}
+
+.myForm {
+  text-align: center;
+}
+
+.profile-tickets {
+
+}
+
+.form-group {
+  margin-bottom: 10px;
 }
 
 .footer {
@@ -460,6 +483,34 @@ table td {
   padding: 4px;
   background-color: green;
   font-size: 140%;
+}
+
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup__content {
+  background-color: rgb(19, 0, 233);
+  border: black solid 2px;
+  padding: 20px;
+  border-radius: 30px;
+  text-align: center;
+}
+
+.popup__content li{
+  text-align: left;
+}
+
+.popup__close {
+  margin-top: 10px;
 }
 
 /* 

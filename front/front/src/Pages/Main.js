@@ -1,18 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import MovieCard from "../Components/MovieCard";
 import axios from "axios";
 import { BaseApiValueContext } from "../Context/BaseApiValueContext";
 
 export function Main() {
-  const { movieApi } = React.useContext(BaseApiValueContext);
   const [popularMovies, setPopularMovies] = useState([]);
+  const baseAPI = useContext(BaseApiValueContext);
+  const baseURL = baseAPI.baseAPI;
 
   async function fetchData() {
     try {
       const response = await axios.get(
-        `${movieApi}/popular?api_key=498f0c94da7ca8672cee0f261723823a`
+        `${baseURL}movies/movies/`
       );
-      setPopularMovies(response.data.results.slice(0, 5));
+      setPopularMovies(response.data.slice(0, 5));
       // console.log(response.data.results)
     } catch (error) {
       console.error(error);

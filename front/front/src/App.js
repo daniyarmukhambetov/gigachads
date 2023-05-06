@@ -11,10 +11,11 @@ import { Browse } from "./Pages/Browse";
 import MovieDetailPage from "./Pages/MovieDetailPage";
 import NotFound from "./Pages/NotFound";
 import { BaseApiValueContext } from "./Context/BaseApiValueContext";
-import { react, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { LoginPage } from "./Pages/LoginPage";
 import { RegisterPage } from "./Pages/RegisterPage";
 import { Profile } from "./Pages/Profile";
+import axios from "axios";
 
 
 function App() {
@@ -25,10 +26,33 @@ function App() {
   // const [username, setUserName] = useState('');
   // const [password, setPassword] = useState('');
 
-  const [movieApi] = useState("https://api.themoviedb.org/3/movie");
-  const [searchApi] = useState("https://api.themoviedb.org/3/search/movie");
-  const [genreApi] = useState("https://api.themoviedb.org/3/genre/movie/list");
-  const [discoverApi] = useState("https://api.themoviedb.org/3/discover/movie");
+  const [baseAPI] = useState("http://127.0.0.1:8000/");
+  const [refresh_token, setRefresh_token] = useState(localStorage.getItem('refresh_token'));
+
+
+
+  const verifyToken = async () => {
+    const response = await axios.post(`${baseAPI}dj-rest-auth/token/refresh/`, {
+      refresh: refresh_token,
+    })
+    .then((response) => {
+      localStorage.setItem("token", response.data.access);
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+  }
+
+  useEffect(() => {
+    // Устанавливаем интервал вызова функции для отправки токена на верификацию
+      const intervalId = setInterval(() => {
+        setRefresh_token(localStorage.getItem('refresh_token'));
+        verifyToken();
+      }, 60000); // 1 минутa в миллисекундах
+  
+    // Очищаем интервал после завершения работы компонента
+    return () => clearInterval(intervalId);
+  }, [refresh_token]);
 
 
   return (
@@ -36,14 +60,11 @@ function App() {
       <div className="App">
         <BaseApiValueContext.Provider
           value={{
-            movieApi,
-            searchApi,
-            genreApi,
-            discoverApi,
+            baseAPI,
           }}
         >
           <Header />
-          {/* <Navigation /> */}
+          <Navigation />
           <Routes>
             <Route path="/" element={<Main />}></Route>
             <Route path="/about" element={<AboutUs />}></Route>

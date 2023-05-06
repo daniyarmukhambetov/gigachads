@@ -1,35 +1,39 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import MovieCard from "../Components/MovieCard";
 import { BaseApiValueContext } from "../Context/BaseApiValueContext";
 
 export function Browse() {
-  const { searchApi } = React.useContext(BaseApiValueContext);
+  const baseAPI = useContext(BaseApiValueContext);
+  const baseURL = baseAPI.baseAPI;
 
   const [movies, setMovies] = useState([]);
 
   const [searchTerm, setSearchTerm] = React.useState("");
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  // const [page, setPage] = useState(1);
+  // const [totalPages, setTotalPages] = useState(1);
 
   const handleChange = (event) => {
     setSearchTerm(event.target.value);
   };
 
-  const handlePageChange = (event) => {
-    setPage(event.target.value);
-  };
+  // const handlePageChange = (event) => {
+  //   setPage(event.target.value);
+  // };
 
-  async function fetchData(query, page) {
+
+
+  async function fetchData(query) {
     try {
       if (query.length > 0) {
         const response = await axios.get(
-          `${searchApi}/?api_key=498f0c94da7ca8672cee0f261723823a&query=${query}&page=${
-            page > 0 ? page : 1
-          }`
-        );
-        setMovies(response.data.results);
-        setTotalPages(response.data.total_pages);
+          `${baseURL}movies/movies/`
+        , {
+          params : {
+            search: query,
+          }
+        });
+        setMovies(response.data);
       }
     } catch (error) {
       console.error(error);
@@ -37,9 +41,9 @@ export function Browse() {
   }
 
   useEffect(() => {
-    fetchData(searchTerm, page).then();
+    fetchData(searchTerm).then();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchTerm, page]);
+  }, [searchTerm]);
 
   return (
     <div className="content">
@@ -55,7 +59,7 @@ export function Browse() {
             onChange={handleChange}
           />
 
-          <input
+          {/* <input
             type="text"
             name="page"
             id="page"
@@ -63,7 +67,7 @@ export function Browse() {
             placeholder={`Page from 1 to ${totalPages}`}
             value={page}
             onChange={handlePageChange}
-          />
+          /> */}
         </form>
         <div className="popular-movies">
           {movies.map((m) => (
