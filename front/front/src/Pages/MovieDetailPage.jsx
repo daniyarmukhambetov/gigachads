@@ -1,23 +1,27 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { BaseApiValueContext } from "../Context/BaseApiValueContext";
+
 
 
 function MovieDetailPage() {
   const token = 'Bearer ' + localStorage.getItem('token');
   const headers = { Authorization: token };
-  
 
+  const baseAPI = useContext(BaseApiValueContext);
+  const baseURL = baseAPI.baseAPI;
+
+  
   const [isOpen, setIsOpen] = useState(false);
 
-  const moviesApi = "https://api.themoviedb.org/3/movie";
-  const imagePath = "https://image.tmdb.org/t/p/original";
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [movie, setMovie] = useState(null);
+  const [movie, setMovie] = useState();
 
   const [sorted, setSorted] = useState('cinema');
   const [date, setDate] = useState(new Date().toISOString().substr(0, 10));
+  
 
   const handleDateChange = (event) => {
     setDate(event.target.value);
@@ -31,7 +35,7 @@ function MovieDetailPage() {
   async function fetchData() {
     try {
       const response = await axios.get(
-        `${moviesApi}/${id}?api_key=498f0c94da7ca8672cee0f261723823a`
+        `${baseURL}movies/movies/${id}/`
       );
       setMovie(response.data);
       setLoading(false);
@@ -55,16 +59,16 @@ function MovieDetailPage() {
 
   async function fetchEventData() {
     if (sorted == 'cinema') {
-      url = 'http://127.0.0.1:8000/cinema/by_cinema/';
+      url = `${baseURL}cinema/by_cinema/`;
     } else if (sorted == 'time') {
-      url = 'http://127.0.0.1:8000/cinema/by_time/'
+      url = `${baseURL}cinema/by_time/`;
     }
 
       const response = await axios.get(
         url, {
           params: {
             date: date,
-            movie_id: 1
+            movie_id: id,
           },
         }
       )
@@ -81,9 +85,14 @@ function MovieDetailPage() {
 
   function excludedSeats(seats) {
     let seat = [];
+    let myBook = [];
     for (let i = 0; i < seats.length; i++) {
       seat.push(parseInt((seats[i].seat_number)));
+      if (seats[i].is_users_ticket === true) {
+        myBook.push(parseInt(seats[i].seat_number));
+      }
     }
+    setMyBooked(myBook);
     return seat;
   }
 
@@ -92,13 +101,16 @@ function MovieDetailPage() {
   async function openModal(event) {
     setIsOpen(true);
     setCurrentEvent(event);
-    const response = await axios.get('http://127.0.0.1:8000/tickets/tickets/', {
+    const response = await axios.get(`${baseURL}tickets/tickets/`, {
       params: {
         event__id: event.id,
-      }
+      }, 
+      headers,
       }
       )
-      .then(response => setExcludedNumbers(excludedSeats(response.data)))
+      .then(response => {
+        setExcludedNumbers(excludedSeats(response.data));
+    })
       .catch((error) => {
         console.log(error);
       });
@@ -119,13 +131,13 @@ function MovieDetailPage() {
 
 
   async function bookTickets() {
-    const response = await axios.post('http://127.0.0.1:8000/tickets/tickets/', parseSelected(selected), {
+    const response = await axios.post(`${baseURL}tickets/tickets/`, parseSelected(selected), {
       params: {
         event: currentEvent.id,
       },
       headers,
     })
-    .then(response => (console.log(response.data)))
+    .then()
     .catch((error) => {
       console.log(error);
     });
@@ -142,6 +154,7 @@ function MovieDetailPage() {
 
   const [excludedNumbers, setExcludedNumbers] = useState([]);
   const [selected, setSelected] = useState([]);
+  const [myBooked, setMyBooked] = useState([]);
 
   const handleSelect = (num) => {
     const index = selected.indexOf(num);
@@ -173,16 +186,6 @@ function MovieDetailPage() {
     fetchEventData();
   }, []);
 
-  // useEffect(() => {
-  //   axios.defaults.headers.common['authorization'] = `Bearer ${localStorage.getItem('token')}`;
-  // }, [localStorage.getItem('token')]);
-  // useEffect(() => {
-  //   fetchData().then();
-  //   fetchEventData();
-    
-  //   // fetchMovieData();
-  // });
-
   return (
     <div className="content">
       
@@ -192,11 +195,7 @@ function MovieDetailPage() {
         <div className="movie-detail-card">
           <div className="movie-detail-card-img">
             <img
-              src={`${
-                movie.poster_path !== null
-                  ? `${imagePath}/${movie.poster_path}`
-                  : "../default-movie.jpg"
-              }`}
+              src={`../default-movie.jpg`}
               alt="Logo"
             />
           </div>
@@ -212,24 +211,22 @@ function MovieDetailPage() {
             <div className="row">
               <div className="row-title">Country</div>
               <div className="row-value">
-                {movie.production_countries.map((c) => (
-                  <p key={c.name}>{c.name}</p>
-                ))}
+                {movie.country}
               </div>
             </div>
             <div className="row">
               <div className="row-title">Genres</div>
               <div className="row-value">
-                {movie.genres.map((g, index) => (
-                  <p to={`/genre/${g.id}`} key={g.id}>
-                    {g.name} {index < movie.genres.length - 1 ? "," : ""}
+                {movie.category.map((g, index) => (
+                  <p to={`category/${g.id}`} key={g.id}>
+                    {g.name} {index < movie.category.length - 1 ? "," : ""}
                   </p>
                 ))}
               </div>
             </div>
             <div className="row">
               <div className="row-title">Time</div>
-              <div className="row-value">{movie.runtime} min</div>
+              <div className="row-value">{movie.duration} min</div>
             </div>
             <div className="row">
               <div className="row-title">Revenue</div>
@@ -249,10 +246,13 @@ function MovieDetailPage() {
             </div>
             <div className="row">
               <div className="row-title">Rating</div>
-              <div className="row-value">{movie.vote_average} out of 10</div>
+              <div className="row-value">{movie.rating} out of 10</div>
+            </div>
+            <div className="row">
+              <div className="row-title">Description:</div>
+              <div className="row-value">{movie.description}</div>
             </div>
           </div>
-          <div className="movie-detail-overview">"{movie.overview}"</div>
         </div>
       )}
       <div className="classSort">
@@ -299,7 +299,7 @@ function MovieDetailPage() {
                           border: '1px solid black',
                           width: '50px',
                           height: '30px',
-                          backgroundColor: selected.includes(col) ? 'green' : excludedNumbers.includes(col) ? 'red' : 'white',
+                          backgroundColor: selected.includes(col) ? 'green' : myBooked.includes(col) ? 'blue' : excludedNumbers.includes(col) ? 'red' : 'white',
                           cursor: excludedNumbers.includes(col) ? 'not-allowed' : 'pointer',
                         }}
                       >

@@ -1,19 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import MovieCard from "../Components/MovieCard";
 import { BaseApiValueContext } from "../Context/BaseApiValueContext";
 
 export function Premieres() {
   const { movieApi } = React.useContext(BaseApiValueContext);
-  const [upcomingMovies, setUpcomingMovies] = useState([]);
+  const [announced, setAnnounced] = useState([]);
   const [loading, setLoading] = useState(true);
+  const baseAPI = useContext(BaseApiValueContext);
+  const baseURL = baseAPI.baseAPI;
 
   async function fetchData() {
     try {
       const response = await axios.get(
-        `${movieApi}/now_playing?api_key=498f0c94da7ca8672cee0f261723823a`
-      );
-      setUpcomingMovies(response.data.results);
+        `${baseURL}movies/movies/`
+      , {
+        params: {
+          status__name: "Released",
+        }
+      });
+      setAnnounced(response.data);
       setLoading(false);
     } catch (error) {
       console.error(error);
@@ -30,9 +36,9 @@ export function Premieres() {
       <div className="content-wrapper">
         <h3>Now Playing</h3>
         {loading && <h2>Loading...</h2>}
-        {upcomingMovies && (
+        {announced && (
           <div className="popular-movies">
-            {upcomingMovies.map((movie) => (
+            {announced.map((movie) => (
               <MovieCard movie={movie} key={movie.id} />
             ))}
           </div>

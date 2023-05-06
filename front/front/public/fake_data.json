@@ -2,16 +2,46 @@
   "moderators": [
     {
       "ID": 1,
-      "Name": "Alex",
-      "Surname": "Kim",
-      "Age": 19,
+      "Name": "Aleksandr",
+      "Surname": "Kuma",
+      "Age": 20,
       "Gender": "male",
       "Img": "./panda.png",
-      "Status": "subJunior WEB developer, 3rd year student of KBTU university",
-      "Github": "https://github.com/KumaAlex"
+      "Status": "Student Django developer, 3rd year student of KBTU university",
+      "Github": "https://github.com/daniyarmukhambetov/gigachads/"
     },
     {
       "ID": 2,
+      "Name": "Daniyar",
+      "Surname": "Doni",
+      "Age": 20,
+      "Gender": "male",
+      "Img": "./doni.jpg",
+      "Status": "Django developer, 3rd year student of KBTU university",
+      "Github": "https://github.com/daniyarmukhambetov/gigachads/"
+    },
+    {
+      "ID": 3,
+      "Name": "Imangali",
+      "Surname": "Kniga",
+      "Age": 20,
+      "Gender": "male",
+      "Img": "./Mangal.jpg",
+      "Status": "Student Spring developer, 3rd year student of KBTU university",
+      "Github": "https://github.com/daniyarmukhambetov/gigachads/"
+    },
+    {
+      "ID": 4,
+      "Name": "Tamirlan",
+      "Surname": "Van Damme",
+      "Age": 19,
+      "Gender": "male",
+      "Img": "./Tam.jpg",
+      "Status": "Student Django developer, 3rd year student of KBTU university",
+      "Github": "https://github.com/daniyarmukhambetov/gigachads/"
+    },
+    {
+      "ID": 5,
       "Name": "Azimbek",
       "Surname": "Abdipattaev",
       "Age": 20,

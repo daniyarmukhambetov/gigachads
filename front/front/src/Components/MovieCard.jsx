@@ -1,17 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { BaseApiValueContext } from "../Context/BaseApiValueContext";
 
 const MovieCard = ({ movie }) => {
-  const imagePath = "https://image.tmdb.org/t/p/w200";
+  const baseAPI = useContext(BaseApiValueContext);
+  const baseURL = baseAPI.baseAPI;
   return (
     <div className="movie-card">
       <Link to={`/movies/${movie.id}`}>
         <img
-          src={`${
-            movie.poster_path !== null
-              ? `${imagePath}/${movie.poster_path}`
-              : "./default-movie.jpg"
-          }`}
+          src={`./default-movie.jpg`}
           alt="img"
           className="movie-card-img"
         />
