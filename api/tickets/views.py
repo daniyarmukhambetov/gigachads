@@ -6,6 +6,7 @@ from rest_framework.response import Response
 
 from .models import Ticket
 from .serializers import TicketSerializer
+from .permissions import TicketPermissions
 
 
 class TicketView(
@@ -18,6 +19,7 @@ class TicketView(
     permission_classes = [permissions.AllowAny]
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_fields = ('event__id',)
+    permission_classes = [TicketPermissions, ]
 
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
