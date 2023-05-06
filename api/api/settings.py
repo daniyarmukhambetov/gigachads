@@ -166,6 +166,7 @@ SPECTACULAR_SETTINGS = {
 }
 REST_AUTH = {
     'USE_JWT': True,
+    'JWT_AUTH_HTTPONLY': False,
 }
 
 # Password validation
