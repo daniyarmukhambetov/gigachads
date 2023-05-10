@@ -35,6 +35,7 @@ class Movie(models.Model):
     tagline = models.CharField(max_length=50)
     status = models.ForeignKey(Status, on_delete=models.CASCADE)
     age_limit = models.IntegerField()
+    img = models.CharField(max_length=500, default='https://upload.wikimedia.org/wikipedia/ru/6/6f/%D0%9F%D0%BE%D1%81%D1%82%D0%B5%D1%80_%D1%84%D0%B8%D0%BB%D1%8C%D0%BC%D0%B0_%C2%AB%D0%A2%D0%B5%D1%80%D1%80%D0%B8%D1%82%D0%BE%D1%80%D0%B8%D1%8F%C2%BB.jpg')
 
     def __str__(self):
         return self.title
