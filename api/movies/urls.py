@@ -1,9 +1,12 @@
 from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import MovieViewSet
 
-from movies.views import MovieViewSet, CategoryViewSet, StatusViewSet
+# Create a router and register our viewsets with it.
+router = DefaultRouter()
+router.register(r'movies', MovieViewSet,basename="movies")
 
+# The API URLs are now determined automatically by the router.
 urlpatterns = [
-    path('movie_list/', MovieViewSet.as_view()),
-    path('category_list/', CategoryViewSet.as_view()),
-    path('status_list/', StatusViewSet.as_view()),
+    path('', include(router.urls)),
 ]
